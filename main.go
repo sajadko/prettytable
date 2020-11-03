@@ -102,10 +102,13 @@ func (t *Table) print() {
 	if t.headers != nil {
 
 		fmt.Print(theme["left"])
-		for _, header := range t.headers {
+		for index, header := range t.headers {
 			fmt.Print(header)
-			fmt.Print(theme["middle"])
+			if index != (len(t.headers) - 1) {
+				fmt.Print(theme["middle"])
+			}
 		}
+		fmt.Print(theme["right"])
 		fmt.Print("\n")
 		fmt.Print(theme["left_mid"])
 		for index, length := range maxChars {
@@ -122,11 +125,15 @@ func (t *Table) print() {
 	//Values
 	for index, value := range t.values {
 		fmt.Print(theme["left"])
-		for _, value2 := range value {
+		for index2, value2 := range value {
 			fmt.Print(value2)
-			fmt.Print(theme["middle"])
+			if index2 != (len(value) - 1) {
+				fmt.Print(theme["middle"])
+			}
 		}
+		fmt.Print(theme["right"])
 		fmt.Print("\n")
+
 		if len(value) > 1 && index != (len(value)) {
 			fmt.Print(theme["left_mid"])
 			for index, length := range maxChars {
@@ -217,7 +224,7 @@ func main() {
 		},
 		headers:      []string{"IP", "Mac Address", "Country"},
 		lockedHeader: false,
-		bodyTheme:    "t1",
+		bodyTheme:    "t2",
 		color:        "#FFFFFF",
 		headerSplit:  false,
 	}
