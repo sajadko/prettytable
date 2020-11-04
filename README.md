@@ -46,7 +46,9 @@ clients.pushValue([]string{"32.255.101.12", "93:31:80:fd:42:b7", "USA"})
 Print
 --
 To print the table in terminal use **print** method . 
-
+```go
+clients.print()
+```
 The Output will be like this :
 ```text
 ┌──────────────────┬─────────────────────┬───────────┐
