@@ -48,30 +48,58 @@ func (t *Table) print() {
 	for index, value := range t.values {
 		for index2, value2 := range value {
 			diff := len(value2) - maxChars[index2]
+			var spaces = ""
+			var paddingRight = ""
+			var paddingLeft = ""
 			if -(diff) != 0 {
-				var spaces = ""
 				for i := 1; i <= -(diff); i++ {
 					spaces += " "
 				}
-
-				t.values[index][index2] = value2 + spaces
 			}
+			if t.paddingRight != 0 {
+				for i := 1; i <= t.paddingRight; i++ {
+					paddingRight += " "
+				}
+			}
+			if t.paddingLeft != 0 {
+				for i := 1; i <= t.paddingLeft; i++ {
+					paddingLeft += " "
+				}
+			}
+			t.values[index][index2] = paddingLeft + value2 + paddingRight + spaces
 		}
 	}
 
-	//Add Space To Values
+	//Add Space To Headers
 	for index, value := range t.headers {
 		diff := len(value) - maxChars[index]
+		var spaces = ""
+		var paddingRight = ""
+		var paddingLeft = ""
 		if -(diff) != 0 {
-			var spaces = ""
 			for i := 1; i <= -(diff); i++ {
-				spaces = spaces + " "
+				spaces += " "
 			}
-			t.headers[index] = value + spaces
 		}
+		if t.paddingRight != 0 {
+			for i := 1; i <= t.paddingRight; i++ {
+				paddingRight += " "
+			}
+		}
+		if t.paddingLeft != 0 {
+			for i := 1; i <= t.paddingLeft; i++ {
+				paddingLeft += " "
+			}
+		}
+		t.headers[index] = paddingLeft + value + paddingRight + spaces
 	}
 
 	//fmt.Println(t.values)
+
+	//Add paddings to maxChars
+	for index, max := range maxChars {
+		maxChars[index] = max + t.paddingRight + t.paddingLeft
+	}
 
 	var theme map[string]string
 	switch t.bodyTheme {
@@ -85,8 +113,7 @@ func (t *Table) print() {
 		theme = bodyCharsT1
 	}
 
-	//fmt.Print(theme["top_left"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top_mid"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top_mid"], theme["top"], theme["top"], theme["top"], theme["top"], theme["top_right"], "\n")
-
+	//TOP
 	fmt.Print(theme["top_left"])
 	for index, length := range maxChars {
 		for i := 1; i <= length; i++ {
@@ -148,11 +175,7 @@ func (t *Table) print() {
 		}
 	}
 
-	//fmt.Print(theme["left_mid"], theme["mid"], theme["mid"], theme["mid"], theme["mid"], theme["mid_mid"], theme["mid"], theme["mid"], theme["mid"], theme["mid"], theme["mid_mid"], theme["mid"], theme["mid"], theme["mid"], theme["mid"], theme["right_mid"], "\n")
-	//fmt.Print(theme["left"], "    ", theme["middle"], "    ", theme["middle"], "    ", theme["right"], "\n")
-
-	//fmt.Print(theme["bottom_left"], theme["bottom"], theme["bottom"], theme["bottom"], theme["bottom"], theme["bottom_mid"], theme["bottom"], theme["bottom"], theme["bottom"], theme["bottom"], theme["bottom_mid"], theme["bottom"], theme["bottom"], theme["bottom"], theme["bottom"], theme["bottom_right"], "\n")
-
+	//Bottom
 	fmt.Print(theme["bottom_left"])
 	for index, length := range maxChars {
 		for i := 1; i <= length; i++ {
@@ -227,15 +250,11 @@ func main() {
 		bodyTheme:    "t2",
 		color:        "#FFFFFF",
 		headerSplit:  false,
+		paddingLeft:  2,
+		paddingRight: 2,
 	}
 
 	clients.print()
 
 	fmt.Scanf("h")
-
-	//myInts := []int{4, 2, 6, 1, 8, 7}
-	//fmt.Println(myInts)
-	//sort.Ints(myInts)
-	//fmt.Println(myInts)
-
 }
