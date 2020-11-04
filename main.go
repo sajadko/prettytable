@@ -247,7 +247,7 @@ func main() {
 		},
 		headers:      []string{"IP", "Mac Address", "Country"},
 		lockedHeader: false,
-		bodyTheme:    "t1",
+		bodyTheme:    "t2",
 		color:        "#FFFFFF",
 		headerSplit:  false,
 		paddingLeft:  2,
