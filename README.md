@@ -35,13 +35,17 @@ clients := Table{
 }
 ```
 
-Also you can use **push** method to add data to table :
+Also you can use **pushValue** method to add data to table :
 
 ```go
 
-clients.push([]string{"32.255.101.12", "93:31:80:fd:42:b7", "USA"})
+clients.pushValue([]string{"32.255.101.12", "93:31:80:fd:42:b7", "USA"})
 
 ```
+
+Print
+--
+To print the table in terminal use **print** method . 
 
 The Output will be like this :
 ```text
