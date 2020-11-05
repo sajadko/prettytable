@@ -2,25 +2,51 @@ package main
 
 import (
 	"fmt"
+	"github.com/gookit/color"
 	"sort"
 )
 
+//Table structure
 type Table struct {
 	values       [][]string
 	headers      []string
 	lockedHeader bool
 	bodyTheme    string
-	color        string
+	bodyColor    string
 	headerSplit  bool
 	paddingRight int
 	paddingLeft  int
 }
 
-func (t *Table) pushValue(values []string) {
+//PushValue pushes the value to the table
+func (t *Table) PushValue(values []string) {
 	t.values = append(t.values, values)
 }
 
-func (t *Table) print() {
+//Print prints the table
+func (t *Table) Print() {
+
+	//Set Theme
+	var theme map[string]string
+	switch t.bodyTheme {
+	case "t1":
+		theme = bodyCharsT1
+		break
+	case "t2":
+		theme = bodyCharsT2
+		break
+	default:
+		theme = bodyCharsT1
+	}
+
+	//Change Body Color if exists
+	if t.bodyColor != "" {
+		rgbcolor := color.HEX(t.bodyColor, false)
+		for key, value := range theme {
+			text := rgbcolor.Sprint(value)
+			theme[key] = text
+		}
+	}
 
 	//Calculate Maximum String Length
 	var maxChars []int
@@ -47,7 +73,8 @@ func (t *Table) print() {
 	//Add Space To Values
 	for index, value := range t.values {
 		for index2, value2 := range value {
-			diff := len(value2) - maxChars[index2]
+			diff := len(color.ClearCode(value2)) - maxChars[index2]
+
 			var spaces = ""
 			var paddingRight = ""
 			var paddingLeft = ""
@@ -72,7 +99,7 @@ func (t *Table) print() {
 
 	//Add Space To Headers
 	for index, value := range t.headers {
-		diff := len(value) - maxChars[index]
+		diff := len(color.ClearCode(value)) - maxChars[index]
 		var spaces = ""
 		var paddingRight = ""
 		var paddingLeft = ""
@@ -99,18 +126,6 @@ func (t *Table) print() {
 	//Add paddings to maxChars
 	for index, max := range maxChars {
 		maxChars[index] = max + t.paddingRight + t.paddingLeft
-	}
-
-	var theme map[string]string
-	switch t.bodyTheme {
-	case "t1":
-		theme = bodyCharsT1
-		break
-	case "t2":
-		theme = bodyCharsT2
-		break
-	default:
-		theme = bodyCharsT1
 	}
 
 	//TOP
@@ -224,6 +239,12 @@ var bodyCharsT2 = map[string]string{
 	"middle":       "│",
 }
 
+//Bolder Bolds the text
+func Bolder(text string) string {
+	boldPattern := "\u001B[1m%s\u001B[0m"
+	return fmt.Sprintf(boldPattern, text)
+}
+
 func main() {
 
 	myTable := Table{
@@ -231,30 +252,36 @@ func main() {
 		headers:      []string{"First Name", "Last Name", "Role"},
 		lockedHeader: false,
 		bodyTheme:    "t1",
-		color:        "#FFFFFF",
+		bodyColor:    "#FFFFFF",
 		headerSplit:  false,
 	}
-	myTable.pushValue([]string{"Mr.X", "Anonymous", "Stranger"})
-	myTable.pushValue([]string{"Mr.Y", "Anonymous", "Stranger"})
-	myTable.print()
+	myTable.PushValue([]string{"Mr.X", "Anonymous", "Stranger"})
+	myTable.PushValue([]string{"Mr.Y", "Anonymous", "Stranger"})
+	myTable.Print()
 
+	//aqua := color.RGBColor{0, 255, 255, 0}
 	clients := Table{
 		values: [][]string{
-			{"112.83.68.215", "be:ec:ad:ea:b4:d6", "USA"},
-			{"168.31.13.241", "fc:ee:bd:21:eb:e2", "Canada"},
-			{"137.114.50.162", "3a:55:06:c8:e3:4b", "England"},
-			{"32.255.101.12", "93:31:80:fd:42:b7", "Germany"},
+			{"112.83.68.215", "be:ec:ad:ea:b4:d6", "USA", color.HEX("#76FF03").Sprint("Online"), "Test"},
+			{"168.31.13.241", "fc:ee:bd:21:eb:e2", "Canada", color.HEX("#76FF03").Sprint("Online"), "Test"},
+			{"137.114.50.162", "3a:55:06:c8:e3:4b", "England", color.HEX("#f44336").Sprint("Offline"), "Test"},
+			{"32.255.101.12", "93:31:80:fd:42:b7", "Germany", color.HEX("#76FF03").Sprint("Online"), "Test"},
 		},
-		headers:      []string{"IP", "Mac Address", "Country"},
+		headers:      []string{Bolder("IP"), Bolder("Mac Address"), Bolder("Country"), Bolder("Status"), Bolder("Test")},
 		lockedHeader: false,
 		bodyTheme:    "t2",
-		color:        "#FFFFFF",
+		bodyColor:    "",
 		headerSplit:  false,
 		paddingLeft:  2,
 		paddingRight: 2,
 	}
 
-	clients.print()
+	clients.Print()
 
 	fmt.Scanf("h")
+	//const PrintColor = "\033[38;5;%dm%s\033[39;49m\n"
+	//for i := 0; i <= 256; i++ {
+	//	fmt.Printf(PrintColor, i, "Sajad")
+	//}
+
 }
